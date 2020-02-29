@@ -35,9 +35,9 @@ export async function run() {
         core.addPath(path.join(installDir, 'bin'));
         console.log('Added go to the path');
 
-        const GOPATH = await installer.getGOPATH();
-        core.addPath(path.join(GOPATH, 'bin'));
-        console.log('Added go bin to the path');
+        const gopath = await installer.getGOPATH();
+        core.addPath(path.join(gopath, 'bin'));
+        console.log(`Added ${gopath} to the path`);
       } else {
         throw new Error(
           `Could not find a version that satisfied version spec: ${versionSpec}`
