@@ -4704,7 +4704,7 @@ function getGOPATH() {
         if (code !== 0) {
             throw new Error(`Failed to get GOPATH: ${stderr}`);
         }
-        return stdout;
+        return stdout.trim();
     });
 }
 exports.getGOPATH = getGOPATH;

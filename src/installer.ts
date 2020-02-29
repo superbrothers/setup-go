@@ -159,5 +159,5 @@ export async function getGOPATH(): Promise<string> {
     throw new Error(`Failed to get GOPATH: ${stderr}`);
   }
 
-  return stdout;
+  return stdout.trim();
 }
