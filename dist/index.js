@@ -1302,6 +1302,9 @@ function run() {
                     core.exportVariable('GOROOT', installDir);
                     core.addPath(path.join(installDir, 'bin'));
                     console.log('Added go to the path');
+                    const GOPATH = yield installer.getGOPATH();
+                    core.addPath(path.join(GOPATH, 'bin'));
+                    console.log('Added go bin to the path');
                 }
                 else {
                     throw new Error(`Could not find a version that satisfied version spec: ${versionSpec}`);
@@ -4581,6 +4584,7 @@ const semver = __importStar(__webpack_require__(280));
 const httpm = __importStar(__webpack_require__(539));
 const sys = __importStar(__webpack_require__(737));
 const core_1 = __webpack_require__(470);
+const exec = __importStar(__webpack_require__(986));
 function downloadGo(versionSpec, stable) {
     return __awaiter(this, void 0, void 0, function* () {
         let toolPath;
@@ -4682,6 +4686,28 @@ function makeSemver(version) {
     return `${verPart}${prereleasePart}`;
 }
 exports.makeSemver = makeSemver;
+function getGOPATH() {
+    return __awaiter(this, void 0, void 0, function* () {
+        let stdout = '';
+        let stderr = '';
+        const options = {
+            listeners: {
+                stdout: (data) => {
+                    stdout += data.toString();
+                },
+                stderr: (data) => {
+                    stderr += data.toString();
+                }
+            }
+        };
+        const code = yield exec.exec('go', ['env', 'GOPATH'], options);
+        if (code !== 0) {
+            throw new Error(`Failed to get GOPATH: ${stderr}`);
+        }
+        return stdout;
+    });
+}
+exports.getGOPATH = getGOPATH;
 
 
 /***/ }),

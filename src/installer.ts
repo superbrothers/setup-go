@@ -4,6 +4,7 @@ import * as semver from 'semver';
 import * as httpm from '@actions/http-client';
 import * as sys from './system';
 import {debug} from '@actions/core';
+import * as exec from '@actions/exec';
 
 export async function downloadGo(
   versionSpec: string,
@@ -136,4 +137,27 @@ export function makeSemver(version: string): string {
   }
 
   return `${verPart}${prereleasePart}`;
+}
+
+export async function getGOPATH(): Promise<string> {
+  let stdout = '';
+  let stderr = '';
+
+  const options = {
+    listeners: {
+      stdout: (data: Buffer) => {
+        stdout += data.toString();
+      },
+      stderr: (data: Buffer) => {
+        stderr += data.toString();
+      }
+    }
+  };
+
+  const code = await exec.exec('go', ['env', 'GOPATH'], options);
+  if (code !== 0) {
+    throw new Error(`Failed to get GOPATH: ${stderr}`);
+  }
+
+  return stdout;
 }

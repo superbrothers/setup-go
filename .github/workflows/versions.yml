@@ -2,7 +2,7 @@ name: go-versions
 on:
     push:
       branches:
-        - master
+        - "**"
       paths-ignore:
         - '**.md'
     pull_request:
@@ -23,6 +23,11 @@ jobs:
       uses: ./
       with:
         go-version: ^1.13.6
+
+    - run: go get -u github.com/golang/example/hello
+    - run: |
+        "$(go env GOPATH)/bin/hello"
+        hello
 
     - name: validate version 
       run: go version | grep "go1.13."
